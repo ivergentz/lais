@@ -1,3 +1,4 @@
+import styled from "styled-components"
 import Darts from "../components/Darts"
 import Footer from "../components/Footer"
 import Frontpage from "../components/Frontpage"
@@ -15,11 +16,13 @@ const HomePage = () => {
       <Navigation />
       <News />
       <Frontpage />
-      <Open />
-      <Darts />
-      <Other />
+      <InfoSection>
+        <Location />
+        <Open />
+      </InfoSection>
       <Impressions />
-      <Location />
+      <Other />
+      <Darts />
       <Footer />
       <ScrollUp />
     </>
@@ -27,3 +30,15 @@ const HomePage = () => {
 }
 
 export default HomePage
+
+const InfoSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+`

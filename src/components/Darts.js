@@ -1,151 +1,150 @@
-import React from "react"
 import styled from "styled-components"
 
 const Darts = () => {
   return (
-    <DartsContainer id='darts'>
-      <h3>Darts</h3>
-      <TableBackground>
-        <Wrapper>
-          <Subtitle>
-            Bei uns wird E-Darts gespielt. Mindestens ist ein Automat
-            bespielbar. Allerdings kann es an bestimmten Tagen sein, dass die
-            Automaten abends belegt sind.
-          </Subtitle>
-          <div>
-            <h4>Montag</h4>
-            <p>Ab 20.00 Uhr nur noch ein Automat im vorderen Teil. </p>
-          </div>
-          <div>
-            <h4>Dienstag</h4>
-            <p>
-              Ab ca. 18.00 Uhr Training bzw. Heimspieltag&nbsp;
-              <a
+    <Section id='darts'>
+      <Inner>
+        <Title>DARTS</Title>
+        <IntroText>
+          Bei uns wird E-Darts gespielt. Mindestens ein Automat ist bespielbar.
+          An bestimmten Tagen kann es sein, dass die Automaten abends belegt sind.
+        </IntroText>
+        <Grid>
+          <Card>
+            <CardTitle>Montag</CardTitle>
+            <CardText>Ab 20:00 Uhr nur noch ein Automat im vorderen Teil.</CardText>
+          </Card>
+          <Card>
+            <CardTitle>Dienstag</CardTitle>
+            <CardText>
+              Ab ca. 18:00 Uhr Training bzw. Heimspieltag{" "}
+              <TeamLink
                 href='https://hhedl.de/team_stats.php?team=1069'
                 target='_blank'
                 rel='noreferrer'
               >
                 Elbmotten
-              </a>
+              </TeamLink>
               .
-            </p>
-          </div>
-          <div>
-            <h4>Mittwoch</h4>
-            <p>
-              Ab ca. 18.00 Uhr Training bzw. Heimspieltag&nbsp;
-              <a
+            </CardText>
+          </Card>
+          <Card>
+            <CardTitle>Mittwoch</CardTitle>
+            <CardText>
+              Ab ca. 18:00 Uhr Training bzw. Heimspieltag{" "}
+              <TeamLink
                 href='https://hhedl.de/team_stats.php?team=1178'
                 target='_blank'
                 rel='noreferrer'
               >
-                Elbmotten reloaded.
-              </a>
-            </p>
-          </div>
-          <div>
-            <h4>Donnerstag</h4>
-            <p>
-              Ab ca. 18.00 Uhr Training bzw. Heimspieltag&nbsp;
-              <a
+                Elbmotten reloaded
+              </TeamLink>
+              .
+            </CardText>
+          </Card>
+          <Card>
+            <CardTitle>Donnerstag</CardTitle>
+            <CardText>
+              Ab ca. 18:00 Uhr Training{" "}
+              <TeamLink
                 href='https://hhedl.de/team_stats.php?team=902'
                 target='_blank'
                 rel='noreferrer'
               >
                 Küchenteufel
-              </a>
-              &nbsp; & &nbsp;
-              <a
+              </TeamLink>
+              {" & "}
+              <TeamLink
                 href='https://hhedl.de/team_stats.php?team=1263'
                 target='_blank'
                 rel='noreferrer'
               >
-                Elbomtten 103er
-              </a>
+                Elbmotten 103er
+              </TeamLink>
               .
-            </p>
-          </div>
-        </Wrapper>
-      </TableBackground>
-    </DartsContainer>
+            </CardText>
+          </Card>
+        </Grid>
+      </Inner>
+    </Section>
   )
 }
 
 export default Darts
 
-const DartsContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  min-height: 100vh;
-  max-height: 100vh;
-  align-items: start;
-  justify-content: center;
-  color: black;
+const Section = styled.section`
+  background: #fff;
+  padding: 5rem 2rem;
+`
 
-  @media only screen and (min-width: 768px) {
-    max-width: 60vw;
-  }
+const Inner = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+`
 
-  h3 {
-    font-weight: 200;
-    font-size: 48px;
-    padding: 10vh 0 0 5vw;
-  }
+const Title = styled.h2`
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1.5rem;
 
-  p {
-    font-weight: 200;
-    font-size: 18px;
+  @media (min-width: 768px) {
+    font-size: 3rem;
   }
 `
 
-const Subtitle = styled.p`
-  display: flex;
-  flex-direction: column;
-  font-weight: 700;
+const IntroText = styled.p`
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 400;
+  max-width: 640px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
 `
 
-const TableBackground = styled.div`
-  margin-left: 5vw;
-  width: 90vw;
-  /* border: 1px solid grey; */
-  border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.5) 1.95px 1.95px 2.6px;
-  height: auto;
-  padding: 2vh 0;
-  margin-top: 5vh;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
 
-  @media only screen and (min-width: 768px) {
-    width: 50vw;
-    padding: 2vh 0;
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    margin: -2px;
   }
 `
 
-const Wrapper = styled.div`
-  padding: 0 4vh;
+const Card = styled.div`
+  border: 4px solid #000;
+  padding: 2rem;
+  margin: -2px;
 
-  div {
-    padding: 2vh 0;
+  @media (min-width: 768px) {
+    padding: 2.5rem;
   }
+`
 
-  a {
-    text-decoration: none;
-    color: black;
-    text-decoration: underline;
-  }
+const CardTitle = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+`
 
-  a:hover {
-    font-size: 16px;
-    text-transform: uppercase;
-  }
+const CardText = styled.p`
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+`
 
-  a:active {
-    font-size: 16px;
-    text-transform: uppercase;
-  }
+const TeamLink = styled.a`
+  color: #000;
+  text-decoration: none;
+  border-bottom: 2px solid #000;
+  transition: all 0.3s;
 
-  h4 {
-    font-weight: 700;
-    text-transform: uppercase;
+  &:hover {
+    background: #000;
+    color: #fff;
   }
 `

@@ -1,113 +1,93 @@
-import React from "react"
+import { MapPin, Phone } from "lucide-react"
 import styled from "styled-components"
-import pin from "../assets/pics/icons8-gps-64.png"
-import phone from "../assets/pics/icons8-telefon-50.png"
-import map from "../assets/pics/map-9202470_640.png"
 
 const Location = () => {
   return (
     <Wrapper id='contact'>
-      <BackgroundImage src={map} alt='' />
-      <TextWrapper>
-        <h3>Anfahrt und Kontakt</h3>
-        <Adress>
-          <p>Bei der Reitbahn 1</p>
-          <p>22763 Altona</p>
-          <p>040 397766</p>
-        </Adress>
-        <Link>
-          <a
-            href='https://maps.app.goo.gl/2cXwwerX6ouGu3yV9'
-            target='_blank'
-            rel='noreferrer'
-          >
-            <img src={pin} alt='' />
-          </a>
-          <a href='tel:+4940397766' target='_blank' rel='noreferrer'>
-            <img src={phone} alt='' />
-          </a>
-        </Link>
-      </TextWrapper>
+      <Title>KONTAKT</Title>
+      <Address>
+        <p>Bei der Reitbahn 1</p>
+        <p>22763 Altona</p>
+        <p>040 397766</p>
+      </Address>
+      <ButtonRow>
+        <IconButton
+          as='a'
+          href='https://maps.app.goo.gl/2cXwwerX6ouGu3yV9'
+          target='_blank'
+          rel='noreferrer'
+        >
+          <MapPin size={20} />
+          Karte
+        </IconButton>
+        <IconButton as='a' href='tel:+4940397766'>
+          <Phone size={20} />
+          Anrufen
+        </IconButton>
+      </ButtonRow>
     </Wrapper>
   )
 }
 
 export default Location
 
-const Wrapper = styled.section`
-  padding: 24px;
-  width: 100vw;
-  height: 100vh;
-  background: ;
+const Wrapper = styled.div`
+  flex: 1;
+  padding: 5rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  text-align: center;
 
-  @media only screen and (min-width: 768px) {
-    padding-top: 20vh;
-    justify-content: start;
-    background-color: rgba(240, 165, 0, 0.03);
-    max-width: 80vw;
+  @media (min-width: 768px) {
+    border-right: 4px solid #000;
   }
 `
 
-const BackgroundImage = styled.img`
-  opacity: 0.1;
-  position: absolute;
-  width: 100vw;
-  z-index: 0;
+const Title = styled.h2`
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
 
-  @media only screen and (min-width: 768px) {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 20vw;
+  @media (min-width: 768px) {
+    font-size: 3rem;
   }
 `
 
-const TextWrapper = styled.div`
-  height: auto;
-  z-index: 10;
+const Address = styled.div`
+  margin-bottom: 2rem;
 
-  h3 {
-    font-size: 64px;
-    font-weight: 200;
-    @media only screen and (min-width: 768px) {
-      font-size: 64px;
-    }
-  }
   p {
+    font-size: 1.25rem;
     font-weight: 700;
-    font-size: 24px;
-  }
-
-  a {
-    display: flex;
-    cursor: pointer;
-    width: 70px;
-    height: 70px;
-  }
-
-  img {
-    border-radius: 25px;
-    margin-right: 24px;
-    padding: 3vw;
-    background: black;
-
-    @media only screen and (min-width: 768px) {
-      padding: 1.2vw;
-    }
+    line-height: 1.8;
   }
 `
 
-const Link = styled.div`
+const ButtonRow = styled.div`
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 5vw;
+  gap: 1rem;
 `
 
-const Adress = styled.div`
-  padding: 5vh 0;
+const IconButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #000;
+  color: #fff;
+  border: 4px solid #000;
+  padding: 0.75rem 1.5rem;
+  font-family: "Oswald", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    background: #fff;
+    color: #000;
+  }
 `

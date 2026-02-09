@@ -6,9 +6,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: "Oswald", sans-serif;
-  font-optical-sizing: auto;
-  font-style: normal;
-  max-width: 100vw;
+    font-optical-sizing: auto;
+    font-style: normal;
   }
 
   html {
@@ -20,6 +19,8 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    color: #000;
+    background: #fff;
   }
 
   button {

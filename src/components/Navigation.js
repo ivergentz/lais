@@ -15,11 +15,11 @@ const Navigation = () => {
         <Logo onClick={() => scrollTo("home")}>Lais</Logo>
 
         <DesktopLinks>
-          <NavLink onClick={() => scrollTo("open")}>Öffnungszeiten</NavLink>
-          <NavLink onClick={() => scrollTo("darts")}>Darts</NavLink>
-          <NavLink onClick={() => scrollTo("other")}>Außerdem</NavLink>
-          <NavLink onClick={() => scrollTo("pictures")}>Bilder</NavLink>
           <NavLink onClick={() => scrollTo("contact")}>Kontakt</NavLink>
+          <NavLink onClick={() => scrollTo("open")}>Öffnungszeiten</NavLink>
+          <NavLink onClick={() => scrollTo("pictures")}>Bilder</NavLink>
+          <NavLink onClick={() => scrollTo("other")}>Außerdem</NavLink>
+          <NavLink onClick={() => scrollTo("darts")}>Darts</NavLink>
         </DesktopLinks>
 
         <HamburgerButton onClick={() => setMenuOpen(!menuOpen)}>
@@ -32,11 +32,11 @@ const Navigation = () => {
       {menuOpen && (
         <MobileDropdown>
           <MobileLink onClick={() => scrollTo("home")}>Home</MobileLink>
-          <MobileLink onClick={() => scrollTo("open")}>Öffnungszeiten</MobileLink>
-          <MobileLink onClick={() => scrollTo("darts")}>Darts</MobileLink>
-          <MobileLink onClick={() => scrollTo("other")}>Außerdem</MobileLink>
-          <MobileLink onClick={() => scrollTo("pictures")}>Bilder</MobileLink>
           <MobileLink onClick={() => scrollTo("contact")}>Kontakt</MobileLink>
+          <MobileLink onClick={() => scrollTo("open")}>Öffnungszeiten</MobileLink>
+          <MobileLink onClick={() => scrollTo("pictures")}>Bilder</MobileLink>
+          <MobileLink onClick={() => scrollTo("other")}>Außerdem</MobileLink>
+          <MobileLink onClick={() => scrollTo("darts")}>Darts</MobileLink>
         </MobileDropdown>
       )}
     </Nav>
@@ -54,7 +54,7 @@ const Nav = styled.nav`
   background-color: #000;
   color: #fff;
   z-index: 9999;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  border-bottom: 4px solid #000;
 `
 
 const NavContainer = styled.div`
@@ -69,7 +69,7 @@ const NavContainer = styled.div`
 const Logo = styled.button`
   font-family: "Oswald", sans-serif;
   font-size: 2.5rem;
-  font-weight: 200;
+  font-weight: 900;
   letter-spacing: -2px;
   color: #fff;
   background: none;
@@ -148,7 +148,7 @@ const MenuLine = styled.span`
 
 const MobileDropdown = styled.div`
   background-color: #000;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #fff;
   padding: 1rem 1.5rem 1.5rem;
 
   @media (min-width: 768px) {

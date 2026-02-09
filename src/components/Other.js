@@ -1,75 +1,89 @@
-import React from "react"
 import styled from "styled-components"
 
 const Other = () => {
   return (
-    <Wrapper id='other'>
-      <img src='' alt='' />
-      <div>
-        <h3>Außerdem...</h3>
-        <Day>Raucherkneipe</Day>
-        <Hours>Zutritt erst ab 18 Jahren</Hours>
-        <Day>Bier vom Fass</Day>
-        <Hours>
-          <strong>JEVER</strong> und <strong>Augustiner</strong> gibt es bei uns
-          frisch gezapft
-        </Hours>
-        <Day>Mexikaner</Day>
-        <Hours>Wir sind bekannt für unseren selbstgemachten Mexikaner</Hours>
-      </div>
-    </Wrapper>
+    <Section id='other'>
+      <Inner>
+        <Title>AUSSERDEM</Title>
+        <Grid>
+          <Card>
+            <CardTitle>Raucherkneipe</CardTitle>
+            <CardText>Zutritt erst ab 18 Jahren</CardText>
+          </Card>
+          <Card>
+            <CardTitle>Bier vom Fass</CardTitle>
+            <CardText>
+              <strong>JEVER</strong> und <strong>Augustiner</strong> gibt es bei
+              uns frisch gezapft
+            </CardText>
+          </Card>
+          <Card>
+            <CardTitle>Mexikaner</CardTitle>
+            <CardText>
+              Wir sind bekannt für unseren selbstgemachten Mexikaner
+            </CardText>
+          </Card>
+        </Grid>
+      </Inner>
+    </Section>
   )
 }
 
 export default Other
 
-const Wrapper = styled.section`
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  justify-content: center;
+const Section = styled.section`
   background: #fff;
-  padding-right: 5vw;
+  padding: 5rem 2rem;
+`
 
-  @media only screen and (min-width: 768px) {
-    max-height: 95vh;
-    max-width: 40vw;
-    background: white;
-  }
-  /* 
-  img {
-    position: absolute;
-    top: 210vh;
-    height: 100vh;
-    width: 100vw;
-    object-fit: contain;
-    z-index: 1;
-    opacity: 0.05;
+const Inner = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+`
 
-    @media only screen and (min-width: 768px) {
-      display: none;
-    }
-  } */
+const Title = styled.h2`
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 3rem;
 
-  div {
-    padding: 0 0 0 5vw;
-  }
-
-  h3 {
-    font-weight: 200;
-    font-size: 64px;
-    padding-bottom: 4vh;
+  @media (min-width: 768px) {
+    font-size: 3rem;
   }
 `
 
-const Day = styled.p`
-  font-weight: 700;
-  padding: 2vh 0 0 0;
-  font-size: 32px;
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    margin: -2px;
+  }
 `
-const Hours = styled.p`
-  font-weight: 200;
-  font-size: 28px;
+
+const Card = styled.div`
+  border: 4px solid #000;
+  padding: 2rem;
+  margin: -2px;
+  text-align: center;
+
+  @media (min-width: 768px) {
+    padding: 2.5rem;
+  }
+`
+
+const CardTitle = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+`
+
+const CardText = styled.p`
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
 `
