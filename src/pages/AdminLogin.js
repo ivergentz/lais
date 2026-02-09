@@ -97,7 +97,7 @@ const BackLink = styled.button`
 `
 
 const AdminLogin = () => {
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
@@ -109,15 +109,10 @@ const AdminLogin = () => {
     setLoading(true)
 
     try {
-      console.log("🔐 Login-Versuch mit:", username)
-      const response = await apiService.login(username, password)
-      console.log("✅ Login erfolgreich:", response)
-      console.log("📍 Navigiere zu /admin/dashboard")
+      await apiService.login(email, password)
       navigate("/admin/dashboard")
     } catch (err) {
-      console.error("❌ Login-Fehler:", err)
-      console.error("❌ Fehler-Response:", err.response)
-      setError(err.response?.data?.message || "Login fehlgeschlagen")
+      setError(err.message || "Login fehlgeschlagen")
     } finally {
       setLoading(false)
     }
@@ -129,14 +124,14 @@ const AdminLogin = () => {
         <Title>Admin Login</Title>
         <Form onSubmit={handleSubmit}>
           <InputGroup>
-            <Label>Benutzername</Label>
+            <Label>E-Mail</Label>
             <Input
-              type='text'
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder='admin'
-              autoComplete='username'
+              placeholder='admin@example.com'
+              autoComplete='email'
             />
           </InputGroup>
 
