@@ -93,13 +93,13 @@ const Wrapper = styled.div`
 
   h1 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     text-align: center;
   }
 
   p {
     margin: 0.5rem 0 0 0;
-    font-size: 0.9rem;
+    font-size: 1.3rem;
     text-align: center;
   }
 `
