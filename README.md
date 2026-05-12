@@ -44,13 +44,22 @@ public/
 
 ## Was du anpassen kannst
 
-### Google-Bewertungen-URL
-In `src/components/Reviews.js` ganz oben:
+### Google-Bewertungen anpassen
+In `src/components/Reviews.js` ganz oben — Werte ändern, wenn Rating sich nennenswert verschiebt:
 ```js
-const GOOGLE_REVIEW_URL = "https://maps.app.goo.gl/2cXwwerX6ouGu3yV9"
-// Optional TripAdvisor:
-const TRIPADVISOR_URL = ""
+const REVIEWS = {
+  rating: 4.5,
+  count: 100,  // "100+" wird angezeigt
+  url: "https://maps.app.goo.gl/4ffgCFbthp6cPgUGA",
+}
 ```
+
+> **Hinweis zur Automatisierung**: Eine echte API-Anbindung an Google Places
+> ist möglich (kostenfrei bis 200$/Monat Quota), braucht aber eine
+> Supabase Edge Function als Cache, weil der API-Key nicht client-side
+> liegen darf. Aufwand ca. 2h. Alternativ ließe sich das Rating wie der
+> Störer ins Admin-Dashboard packen — Aufwand ca. 45 Min. Sag Bescheid,
+> wenn du das nachrüsten willst.
 
 ### Öffnungszeiten ändern
 In `src/utils/openStatus.js`:

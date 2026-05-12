@@ -8,21 +8,19 @@ import pic07 from "../assets/pics/07.jpg"
 import pic08 from "../assets/pics/08.jpg"
 import aussen from "../assets/pics/aussen.png"
 
-// Reihenfolge im Bento — "hero" tiles bekommen mehr Platz
 const SLIDES = [
-  { id: 1, pic: pic03, layout: "hero", label: "Promiwand" },
-  { id: 2, pic: aussen, layout: "wide", label: "Außen" },
-  { id: 3, pic: pic02, layout: "tall", label: "50 Jahre" },
-  { id: 4, pic: pic04, layout: "default", label: "Tresen" },
-  { id: 5, pic: pic05, layout: "default", label: "Eingang" },
-  { id: 6, pic: pic07, layout: "wide", label: "Gäste" },
-  { id: 7, pic: pic08, layout: "default", label: "Terrasse" },
+  { id: 1, pic: pic03 },
+  { id: 2, pic: aussen },
+  { id: 3, pic: pic04 },
+  { id: 4, pic: pic02 },
+  { id: 5, pic: pic05 },
+  { id: 6, pic: pic07 },
+  { id: 7, pic: pic08 },
 ]
 
 const Impressions = () => {
   const [activeId, setActiveId] = useState(null)
 
-  // ESC schließt Zoom
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") setActiveId(null)
@@ -43,37 +41,29 @@ const Impressions = () => {
 
       <Title>Lais in Bildern.</Title>
 
-      {/* Desktop: Bento */}
-      <Bento $hasActive={activeId !== null}>
-        {SLIDES.map((slide) => (
-          <Tile
+      <Masonry>
+        {SLIDES.map((slide, i) => (
+          <Item
             key={slide.id}
-            $layout={slide.layout}
             $active={activeId === slide.id}
             $dimmed={activeId !== null && activeId !== slide.id}
             onClick={() => toggle(slide.id)}
-            aria-label={slide.label}
+            aria-label={`Bild ${i + 1} ${
+              activeId === slide.id ? "verkleinern" : "vergrößern"
+            }`}
+            aria-pressed={activeId === slide.id}
           >
-            <TileImg
-              src={slide.pic}
-              alt={slide.label}
-              loading='lazy'
-              $active={activeId === slide.id}
-            />
-            <TileNum>{String(slide.id).padStart(2, "0")}</TileNum>
-            <TileLabel>{slide.label}</TileLabel>
-          </Tile>
+            <Img src={slide.pic} alt='' loading='lazy' />
+            <ItemNum>{String(slide.id).padStart(2, "0")}</ItemNum>
+          </Item>
         ))}
-      </Bento>
+      </Masonry>
 
-      {/* Mobile: scrollable strip */}
       <MobileStrip>
         {SLIDES.map((slide) => (
           <MobileSlide key={slide.id}>
-            <img src={slide.pic} alt={slide.label} loading='lazy' />
-            <MobileLabel>
-              {String(slide.id).padStart(2, "0")} · {slide.label}
-            </MobileLabel>
+            <img src={slide.pic} alt='' loading='lazy' />
+            <MobileNum>{String(slide.id).padStart(2, "0")}</MobileNum>
           </MobileSlide>
         ))}
       </MobileStrip>
@@ -145,61 +135,41 @@ const Title = styled.h2`
   }
 `
 
-/* Bento — Desktop */
-const Bento = styled.div`
+/* Desktop: 3-column Masonry — respects natural image aspect ratio */
+const Masonry = styled.div`
   display: none;
 
   @media (min-width: 768px) {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 180px;
-    gap: 4px;
-    padding: 4px;
+    display: block;
+    column-count: 3;
+    column-gap: 6px;
+    padding: 6px;
     background: var(--grid-bg);
-    transition: all 0.3s ease;
-  }
-
-  @media (min-width: 1024px) {
-    grid-auto-rows: 220px;
   }
 `
 
-const Tile = styled.button`
+const Item = styled.button`
+  display: block;
+  width: 100%;
   position: relative;
-  overflow: hidden;
-  background: var(--tile-bg);
-  border: none;
-  cursor: pointer;
+  margin: 0 0 6px;
   padding: 0;
-  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
-    z-index 0s;
-  z-index: ${(p) => (p.$active ? 5 : 1)};
+  border: none;
+  background: var(--tile-bg);
+  cursor: pointer;
+  overflow: hidden;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  transition: opacity 0.3s ease;
   opacity: ${(p) => (p.$dimmed ? 0.35 : 1)};
 
-  /* Layouts */
-  ${(p) =>
-    p.$layout === "hero" &&
-    `
-    grid-column: span 2;
-    grid-row: span 2;
-  `}
-  ${(p) =>
-    p.$layout === "wide" &&
-    `
-    grid-column: span 2;
-  `}
-  ${(p) =>
-    p.$layout === "tall" &&
-    `
-    grid-row: span 2;
-  `}
-
-  /* Aktiv: nimmt 2x2 ein */
   ${(p) =>
     p.$active &&
     `
-    grid-column: span 2 !important;
-    grid-row: span 2 !important;
+    column-span: all;
+    -webkit-column-span: all;
+    margin-bottom: 10px;
   `}
 
   &:hover {
@@ -207,24 +177,30 @@ const Tile = styled.button`
   }
 `
 
-const TileImg = styled.img`
+const Img = styled.img`
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   display: block;
-  filter: ${(p) =>
-    p.$active
-      ? "grayscale(0%) contrast(1) brightness(1)"
-      : "grayscale(100%) contrast(1.05) brightness(0.85)"};
-  transition: filter 0.35s ease, transform 0.5s ease;
+  filter: grayscale(100%) contrast(1.05) brightness(0.88);
+  transition: filter 0.35s ease, transform 0.5s ease, max-height 0.4s ease;
 
-  ${Tile}:hover & {
+  ${Item}:hover & {
     filter: grayscale(0%) contrast(1) brightness(1);
-    transform: scale(1.04);
+    transform: scale(1.02);
+  }
+
+  ${Item}[aria-pressed="true"] & {
+    filter: grayscale(0%) contrast(1) brightness(1);
+    max-height: 80vh;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    margin: 0 auto;
+    transform: none;
   }
 `
 
-const TileNum = styled.span`
+const ItemNum = styled.span`
   position: absolute;
   top: 8px;
   left: 10px;
@@ -232,35 +208,14 @@ const TileNum = styled.span`
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(0, 0, 0, 0.45);
-  padding: 2px 6px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.55);
+  padding: 2px 7px;
   z-index: 2;
+  pointer-events: none;
 `
 
-const TileLabel = styled.span`
-  position: absolute;
-  bottom: 10px;
-  left: 12px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #fff;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.25s, transform 0.25s;
-  z-index: 2;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-
-  ${Tile}:hover & {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`
-
-/* Mobile Strip */
+/* Mobile horizontal strip */
 const MobileStrip = styled.div`
   display: flex;
   gap: 4px;
@@ -281,31 +236,30 @@ const MobileStrip = styled.div`
 
 const MobileSlide = styled.div`
   flex-shrink: 0;
-  width: 80vw;
+  width: 75vw;
   scroll-snap-align: center;
   position: relative;
   background: var(--tile-bg);
 
   img {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 4;
     object-fit: cover;
     display: block;
     filter: grayscale(100%) contrast(1.05) brightness(0.9);
   }
 `
 
-const MobileLabel = styled.span`
+const MobileNum = styled.span`
   position: absolute;
   bottom: 8px;
   left: 10px;
   font-family: "JetBrains Mono", monospace;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.15em;
-  text-transform: uppercase;
   color: #fff;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.55);
   padding: 3px 7px;
 `
 
