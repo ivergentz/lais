@@ -1,85 +1,188 @@
-import { useState } from "react"
-import styled from "styled-components"
+import { Menu, Moon, Sun, X } from "lucide-react"
+import { useEffect, useState } from "react"
+import styled, { keyframes } from "styled-components"
+import { useTheme } from "../theme"
+import { getOpenStatus } from "../utils/openStatus"
 
 const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [status, setStatus] = useState(getOpenStatus())
+  const { theme, toggleTheme } = useTheme()
+
+  useEffect(() => {
+    const id = setInterval(() => setStatus(getOpenStatus()), 60000)
+    return () => clearInterval(id)
+  }, [])
 
   const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
+    if (id === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
+    }
     setMenuOpen(false)
   }
 
+  const statusText = status.isOpen
+    ? `Jetzt offen · Schließt ${status.closesAt}`
+    : status.opensAt
+    ? `Geschlossen · Wieder ${status.opensAt}`
+    : "Geschlossen"
+
   return (
-    <Nav>
-      <NavContainer>
-        <Logo onClick={() => scrollTo("home")}>Lais</Logo>
+    <Wrapper>
+      <StatusBar>
+        <Status>
+          <Dot $open={status.isOpen} />
+          <span>{statusText}</span>
+        </Status>
+        <ThemeToggle
+          onClick={toggleTheme}
+          aria-label={theme === "light" ? "Dark Mode aktivieren" : "Light Mode aktivieren"}
+        >
+          {theme === "light" ? <Moon size={14} /> : <Sun size={14} />}
+          <span>{theme === "light" ? "Dark" : "Light"}</span>
+        </ThemeToggle>
+      </StatusBar>
 
-        <DesktopLinks>
-          <NavLink onClick={() => scrollTo("contact")}>Kontakt</NavLink>
-          <NavLink onClick={() => scrollTo("open")}>Öffnungszeiten</NavLink>
-          <NavLink onClick={() => scrollTo("pictures")}>Bilder</NavLink>
-          <NavLink onClick={() => scrollTo("other")}>Außerdem</NavLink>
-          <NavLink onClick={() => scrollTo("darts")}>Darts</NavLink>
-        </DesktopLinks>
+      <Nav>
+        <NavInner>
+          <Logo onClick={() => scrollTo("home")}>
+            Lais<LogoDot>.</LogoDot>
+          </Logo>
 
-        <HamburgerButton onClick={() => setMenuOpen(!menuOpen)}>
-          <MenuLine $open={menuOpen} $first />
-          <MenuLine $open={menuOpen} $middle />
-          <MenuLine $open={menuOpen} $last />
-        </HamburgerButton>
-      </NavContainer>
+          <DesktopLinks>
+            <NavLink onClick={() => scrollTo("pictures")}>Bilder</NavLink>
+            <NavLink onClick={() => scrollTo("contact")}>Kontakt</NavLink>
+            <NavLink onClick={() => scrollTo("open")}>Öffnungszeiten</NavLink>
+            <NavLink onClick={() => scrollTo("other")}>Außerdem</NavLink>
+            <NavLink onClick={() => scrollTo("darts")}>Darts</NavLink>
+          </DesktopLinks>
 
-      {menuOpen && (
-        <MobileDropdown>
-          <MobileLink onClick={() => scrollTo("home")}>Home</MobileLink>
-          <MobileLink onClick={() => scrollTo("contact")}>Kontakt</MobileLink>
-          <MobileLink onClick={() => scrollTo("open")}>Öffnungszeiten</MobileLink>
-          <MobileLink onClick={() => scrollTo("pictures")}>Bilder</MobileLink>
-          <MobileLink onClick={() => scrollTo("other")}>Außerdem</MobileLink>
-          <MobileLink onClick={() => scrollTo("darts")}>Darts</MobileLink>
-        </MobileDropdown>
-      )}
-    </Nav>
+          <MobileBtn onClick={() => setMenuOpen((o) => !o)} aria-label='Menü'>
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </MobileBtn>
+        </NavInner>
+
+        {menuOpen && (
+          <MobileDrawer>
+            <MobileLink onClick={() => scrollTo("pictures")}>Bilder</MobileLink>
+            <MobileLink onClick={() => scrollTo("contact")}>Kontakt</MobileLink>
+            <MobileLink onClick={() => scrollTo("open")}>Öffnungszeiten</MobileLink>
+            <MobileLink onClick={() => scrollTo("other")}>Außerdem</MobileLink>
+            <MobileLink onClick={() => scrollTo("darts")}>Darts</MobileLink>
+          </MobileDrawer>
+        )}
+      </Nav>
+    </Wrapper>
   )
 }
 
 export default Navigation
 
-const Nav = styled.nav`
-  position: fixed;
+const Wrapper = styled.header`
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background-color: #000;
-  color: #fff;
   z-index: 9999;
-  border-bottom: 4px solid #000;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
 `
 
-const NavContainer = styled.div`
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 1rem 1.5rem;
+const StatusBar = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0.5rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  @media (min-width: 768px) {
+    padding: 0.5rem 2rem;
+  }
+`
+
+const Status = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--fg);
+  font-weight: 500;
+`
+
+const blink = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+`
+
+const Dot = styled.span`
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: ${(p) => (p.$open ? "var(--accent)" : "var(--muted)")};
+  display: inline-block;
+  animation: ${(p) => (p.$open ? blink : "none")} 1.6s ease-in-out infinite;
+`
+
+const ThemeToggle = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+
+  &:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+`
+
+const Nav = styled.div`
+  background: var(--bg);
+`
+
+const NavInner = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  max-width: 1440px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    padding: 1rem 2rem;
+  }
 `
 
 const Logo = styled.button`
-  font-family: "Oswald", sans-serif;
-  font-size: 2.5rem;
+  font-family: "Fraunces", serif;
+  font-size: 2rem;
   font-weight: 900;
-  letter-spacing: -2px;
-  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.05em;
   background: none;
   border: none;
   cursor: pointer;
-  transition: opacity 0.3s;
+  padding: 0;
+  color: var(--fg);
 
-  &:hover {
-    opacity: 0.8;
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
   }
+`
+
+const LogoDot = styled.span`
+  color: var(--accent);
 `
 
 const DesktopLinks = styled.div`
@@ -88,68 +191,49 @@ const DesktopLinks = styled.div`
   @media (min-width: 768px) {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.75rem;
   }
 `
 
 const NavLink = styled.button`
-  font-family: "Oswald", sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--fg);
   background: none;
   border: none;
+  border-bottom: 1px solid transparent;
+  padding: 4px 0;
   cursor: pointer;
-  transition: opacity 0.3s;
-  letter-spacing: 0.5px;
+  transition: border-color 0.2s, color 0.2s;
 
   &:hover {
-    opacity: 0.7;
+    border-bottom-color: var(--accent);
+    color: var(--accent);
   }
 `
 
-const HamburgerButton = styled.button`
+const MobileBtn = styled.button`
   display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  width: 2rem;
+  align-items: center;
+  justify-content: center;
   background: none;
-  border: none;
+  border: 1px solid var(--line);
   cursor: pointer;
-  padding: 0.25rem 0;
+  padding: 0.5rem;
+  color: var(--fg);
 
   @media (min-width: 768px) {
     display: none;
   }
 `
 
-const MenuLine = styled.span`
-  height: 2px;
-  width: 100%;
-  background-color: #fff;
-  transition: all 0.3s;
-
-  ${(props) =>
-    props.$open &&
-    props.$first &&
-    `transform: rotate(45deg) translateY(8px);`}
-
-  ${(props) =>
-    props.$open &&
-    props.$middle &&
-    `opacity: 0;`}
-
-  ${(props) =>
-    props.$open &&
-    props.$last &&
-    `transform: rotate(-45deg) translateY(-8px);`}
-`
-
-const MobileDropdown = styled.div`
-  background-color: #000;
-  border-top: 4px solid #fff;
-  padding: 1rem 1.5rem 1.5rem;
+const MobileDrawer = styled.div`
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  padding: 0.5rem 1.25rem 1rem;
 
   @media (min-width: 768px) {
     display: none;
@@ -160,19 +244,23 @@ const MobileLink = styled.button`
   display: block;
   width: 100%;
   text-align: left;
-  font-family: "Oswald", sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--fg);
   background: none;
   border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 0.875rem 0;
   cursor: pointer;
-  padding: 0.75rem 0;
-  transition: opacity 0.3s;
-  letter-spacing: 0.5px;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
-    opacity: 0.7;
+    color: var(--accent);
   }
 `

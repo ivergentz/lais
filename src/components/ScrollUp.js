@@ -1,62 +1,58 @@
-import React, { useEffect, useState } from "react"
-import { animateScroll as scroll } from "react-scroll"
+import { ArrowUp } from "lucide-react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
-import up from "../assets/pics/icons8-oben-100.png"
 
-const App = () => {
-  const [showScrollButton, setShowScrollButton] = useState(false)
+const ScrollUp = () => {
+  const [visible, setVisible] = useState(false)
 
-  // Show button when page is scrolled down
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowScrollButton(true)
-      } else {
-        setShowScrollButton(false)
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
+    const handle = () => setVisible(window.scrollY > 400)
+    window.addEventListener("scroll", handle, { passive: true })
+    return () => window.removeEventListener("scroll", handle)
   }, [])
 
-  // Scroll back to top function
   const scrollToTop = () => {
-    scroll.scrollToTop({ smooth: true, duration: 500 })
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
+  if (!visible) return null
+
   return (
-    <div>
-      {showScrollButton && (
-        <Button onClick={scrollToTop}>
-          <img src={up} alt='' />
-        </Button>
-      )}
-    </div>
+    <Btn onClick={scrollToTop} aria-label='Nach oben scrollen'>
+      <ArrowUp size={18} />
+    </Btn>
   )
 }
 
-export default App
+export default ScrollUp
 
-const Button = styled.button`
+const Btn = styled.button`
   position: fixed;
-  right: 5vw;
-  bottom: 5vh;
-  border: none;
-  background: transparent;
-  padding: 10px 20px;
-  font-size: 16px;
-  color: white;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  width: 44px;
+  height: 44px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
   cursor: pointer;
-  z-index: 202;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 
-  img {
-    height: 30px;
-    width: 30px;
-    opacity: 1;
-    background: black;
-    border-radius: 25px;
+  &:hover {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+    transform: translateY(-2px);
+  }
+
+  @media (min-width: 768px) {
+    right: 2rem;
+    bottom: 2rem;
+    width: 48px;
+    height: 48px;
   }
 `

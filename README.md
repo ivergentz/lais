@@ -1,70 +1,97 @@
-# Getting Started with Create React App
+# Lais Ottensen — Redesign Drop-in
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Raw Editorial / Neo-Brutalist Redesign. Drop-in für dein bestehendes
+React-Repo `lais-main`. Alle Files unten ersetzen die jeweils gleich
+benannten in deinem `src/`-Tree.
 
-## Available Scripts
+## Inhalt des ZIPs
 
-In the project directory, you can run:
+```
+src/
+├── App.js                       # ← ersetzen (wraps in ThemeProvider)
+├── GlobalStyle.js               # ← ersetzen (CSS-Variablen, Dark Mode)
+├── theme.js                     # ← NEU
+├── components/
+│   ├── Navigation.js            # ← ersetzen (Top-Bar, Live-Status, Theme-Toggle)
+│   ├── Frontpage.js             # ← ersetzen (Hero "Lais.")
+│   ├── News.js                  # ← ersetzen (Marquee, liest Störer aus Supabase)
+│   ├── Impressions.js           # ← ersetzen (Bento + Click-Zoom-in-Grid)
+│   ├── Location.js              # ← ersetzen (Telefon nur hinter Button)
+│   ├── Open.js                  # ← ersetzen (Live-Status, aktive Zeile markiert)
+│   ├── Other.js                 # ← ersetzen
+│   ├── Reviews.js               # ← NEU (Google-Bewertungen Link)
+│   ├── Darts.js                 # ← ersetzen (Montag entfernt)
+│   ├── Footer.js                # ← ersetzen
+│   ├── Modal.js                 # ← ersetzen (themed)
+│   └── ScrollUp.js              # ← ersetzen
+├── pages/
+│   └── HomePage.js              # ← ersetzen (neue Reihenfolge: Bilder oben)
+└── utils/
+    └── openStatus.js            # ← NEU (Live-Status-Logik)
 
-### `npm start`
+public/
+└── index.html                   # ← ersetzen (Fonts: Fraunces + JetBrains Mono)
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Was du nichts machen musst
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- `Supabase` / Admin-Dashboard funktioniert weiter wie bisher — der
+  Störer-Inhalt aus dem Dashboard wird jetzt in die rote Laufschrift
+  übersetzt (line1 + line2). Wenn Störer inaktiv ist, läuft der
+  Default-Text durch ("Raucherkneipe · Bier vom Fass · …").
+- Routen (`/admin/login`, `/admin/dashboard`) bleiben unverändert.
+- Alle Asset-Pfade auf `../assets/pics/*` wie bisher.
 
-### `npm test`
+## Was du anpassen kannst
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Google-Bewertungen-URL
+In `src/components/Reviews.js` ganz oben:
+```js
+const GOOGLE_REVIEW_URL = "https://maps.app.goo.gl/2cXwwerX6ouGu3yV9"
+// Optional TripAdvisor:
+const TRIPADVISOR_URL = ""
+```
 
-### `npm run build`
+### Öffnungszeiten ändern
+In `src/utils/openStatus.js`:
+```js
+const SCHEDULE = {
+  0: null,                      // Sonntag — Ruhetag
+  1: null,                      // Montag — Ruhetag
+  2: { open: 16, close: 25 },   // Dienstag bis 01:00 (Folgetag)
+  3: { open: 16, close: 25 },   // Mittwoch
+  4: { open: 16, close: 25 },   // Donnerstag
+  5: { open: 16, close: 27 },   // Freitag bis 03:00
+  6: { open: 16, close: 27 },   // Samstag bis 03:00
+}
+```
+`close > 24` heißt: die Schicht reicht in den Folgetag rein. Zusätzlich
+musst du die angezeigten Zeiten in `src/components/Open.js` (Konstante
+`ROWS`) updaten, falls du z.B. die Wochenende-Zeiten änderst.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Farbe vom Akzent (Rot)
+In `src/GlobalStyle.js` — `--accent`. Default:
+- Light: `#e63946`
+- Dark:  `#ff3b3b`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Dependencies — schon installiert ✓
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`lucide-react` und `styled-components` sind bereits in deinem
+`package.json`. Keine neuen Installationen nötig.
 
-### `npm run eject`
+## Was geblieben ist
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Carousel.js, DesktopMenu.js, MobileMenu.js: nicht mehr verwendet,
+  aber bewusst nicht gelöscht — kannst du selber wegräumen wenn du
+  willst.
+- assets/pics/ Bilder: alle erhalten, gleiche Pfade.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Funktional getestet — was du noch prüfen solltest
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Marquee zeigt Störer wenn aktiv (Dashboard testen)
+2. Live-Status: heute Abend > 16:00 sollte "Jetzt offen" zeigen
+3. Dark-Mode-Toggle persistiert über Reload (localStorage)
+4. Galerie: Klick auf Bild zoomt es im Raster auf 2x2
+5. Logo "Lais." oben links scrollt nach oben
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Falls was klemmt — sag Bescheid, ich passe an.

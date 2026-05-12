@@ -4,27 +4,33 @@ import styled from "styled-components"
 const Location = () => {
   return (
     <Wrapper id='contact'>
-      <Title>KONTAKT</Title>
+      <Head>
+        <Num>// 01</Num>
+        <Eyebrow>Kontakt</Eyebrow>
+      </Head>
+
+      <Title>Finde uns.</Title>
+
       <Address>
-        <p>Bei der Reitbahn 1</p>
-        <p>22763 Altona</p>
-        <p>040 397766</p>
+        Bei der Reitbahn 1
+        <br />
+        22763 Hamburg-Altona
       </Address>
-      <ButtonRow>
-        <IconButton
-          as='a'
+
+      <Buttons>
+        <PrimaryBtn
           href='https://maps.app.goo.gl/2cXwwerX6ouGu3yV9'
           target='_blank'
           rel='noreferrer'
         >
-          <MapPin size={20} />
-          Karte
-        </IconButton>
-        <IconButton as='a' href='tel:+4940397766'>
-          <Phone size={20} />
+          <MapPin size={16} />
+          Karte öffnen
+        </PrimaryBtn>
+        <GhostBtn href='tel:+4940397766'>
+          <Phone size={16} />
           Anrufen
-        </IconButton>
-      </ButtonRow>
+        </GhostBtn>
+      </Buttons>
     </Wrapper>
   )
 }
@@ -32,62 +38,105 @@ const Location = () => {
 export default Location
 
 const Wrapper = styled.div`
-  flex: 1;
-  padding: 5rem 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  padding: 3rem 1.5rem;
+  background: var(--bg);
+  color: var(--fg);
 
   @media (min-width: 768px) {
-    border-right: 4px solid #000;
+    padding: 4rem 2.5rem;
   }
 `
 
-const Title = styled.h2`
-  font-size: 2rem;
-  font-weight: 900;
+const Head = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin-bottom: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+`
+
+const Num = styled.span`
+  color: var(--accent);
+  font-weight: 700;
+`
+
+const Eyebrow = styled.span`
+  color: var(--muted);
+`
+
+const Title = styled.h2`
+  font-family: "Fraunces", serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 0 0 1.25rem;
+  color: var(--fg);
 
   @media (min-width: 768px) {
     font-size: 3rem;
   }
 `
 
-const Address = styled.div`
-  margin-bottom: 2rem;
+const Address = styled.p`
+  font-family: "Fraunces", serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0 0 1.75rem;
+  color: var(--fg);
 
-  p {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.8;
+  @media (min-width: 768px) {
+    font-size: 1.75rem;
   }
 `
 
-const ButtonRow = styled.div`
+const Buttons = styled.div`
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 `
 
-const IconButton = styled.button`
+const btnBase = `
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #000;
-  color: #fff;
-  border: 4px solid #000;
-  padding: 0.75rem 1.5rem;
-  font-family: "Oswald", sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
+  padding: 0.75rem 1.125rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   text-decoration: none;
+  border: 1px solid var(--line);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+`
+
+const PrimaryBtn = styled.a`
+  ${btnBase}
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 
   &:hover {
-    background: #fff;
-    color: #000;
+    background: transparent;
+    color: var(--accent);
+  }
+`
+
+const GhostBtn = styled.a`
+  ${btnBase}
+  background: transparent;
+  color: var(--fg);
+
+  &:hover {
+    background: var(--fg);
+    color: var(--bg);
   }
 `
