@@ -17,11 +17,11 @@ const HomePage = () => {
       <Navigation />
       <Frontpage />
       <News />
-      <Impressions />
-      <InfoSection>
+          <InfoSection>
         <Location />
         <Open />
       </InfoSection>
+      <Impressions />
       <Other />
       <Reviews />
       <Darts />
