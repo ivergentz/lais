@@ -2,7 +2,7 @@ import { ExternalLink, Star } from "lucide-react"
 import styled from "styled-components"
 
 // === Hier deine echte Google-Maps-URL eintragen ===
-const GOOGLE_REVIEW_URL = "https://maps.app.goo.gl/2cXwwerX6ouGu3yV9"
+const GOOGLE_REVIEW_URL = "https://maps.app.goo.gl/4ffgCFbthp6cPgUGA"
 // Optional auch andere Plattformen — leer lassen, dann werden sie ausgeblendet
 const TRIPADVISOR_URL = ""
 
