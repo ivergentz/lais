@@ -1,3 +1,4 @@
+import { X } from "lucide-react"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import pic02 from "../assets/pics/02.jpg"
@@ -19,17 +20,43 @@ const SLIDES = [
 ]
 
 const Impressions = () => {
+  // Desktop inline-zoom (klick auf Masonry-Item)
   const [activeId, setActiveId] = useState(null)
+  // Mobile fullscreen-overlay (tap auf Mobile- oder Masonry-Bild)
+  const [overlayId, setOverlayId] = useState(null)
 
+  // ESC schließt
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") setActiveId(null)
+      if (e.key === "Escape") {
+        setActiveId(null)
+        setOverlayId(null)
+      }
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
   }, [])
 
-  const toggle = (id) => setActiveId((cur) => (cur === id ? null : id))
+  // Scroll-Lock wenn Overlay offen
+  useEffect(() => {
+    document.body.style.overflow = overlayId !== null ? "hidden" : "auto"
+    return () => {
+      document.body.style.overflow = "auto"
+    }
+  }, [overlayId])
+
+  // Auf Mobile (<768px) öffnet Klick das Fullscreen-Overlay,
+  // auf Desktop (≥768px) den Inline-Zoom im Grid.
+  const handleClick = (id) => {
+    const isMobile = window.matchMedia("(max-width: 767px)").matches
+    if (isMobile) {
+      setOverlayId(id)
+    } else {
+      setActiveId((cur) => (cur === id ? null : id))
+    }
+  }
+
+  const overlaySlide = SLIDES.find((s) => s.id === overlayId)
 
   return (
     <Section id='pictures'>
@@ -41,16 +68,15 @@ const Impressions = () => {
 
       <Title>Lais in Bildern.</Title>
 
+      {/* Desktop: 3-Spalten-Masonry */}
       <Masonry>
         {SLIDES.map((slide, i) => (
           <Item
             key={slide.id}
             $active={activeId === slide.id}
             $dimmed={activeId !== null && activeId !== slide.id}
-            onClick={() => toggle(slide.id)}
-            aria-label={`Bild ${i + 1} ${
-              activeId === slide.id ? "verkleinern" : "vergrößern"
-            }`}
+            onClick={() => handleClick(slide.id)}
+            aria-label={`Bild ${i + 1} vergrößern`}
             aria-pressed={activeId === slide.id}
           >
             <Img src={slide.pic} alt='' loading='lazy' />
@@ -59,9 +85,10 @@ const Impressions = () => {
         ))}
       </Masonry>
 
+      {/* Mobile: scrollable strip */}
       <MobileStrip>
         {SLIDES.map((slide) => (
-          <MobileSlide key={slide.id}>
+          <MobileSlide key={slide.id} onClick={() => setOverlayId(slide.id)}>
             <img src={slide.pic} alt='' loading='lazy' />
             <MobileNum>{String(slide.id).padStart(2, "0")}</MobileNum>
           </MobileSlide>
@@ -69,9 +96,32 @@ const Impressions = () => {
       </MobileStrip>
 
       <Caption>
-        <span>S/W · Klick zum Vergrößern</span>
-        <span>Hover für Farbe</span>
+        <CaptionDesktop>S/W · Klick zum Vergrößern · Hover für Farbe</CaptionDesktop>
+        <CaptionMobile>Tippen zum Vergrößern</CaptionMobile>
       </Caption>
+
+      {/* Fullscreen Overlay (primär für Mobile) */}
+      {overlaySlide && (
+        <Overlay onClick={() => setOverlayId(null)}>
+          <CloseBtn
+            onClick={(e) => {
+              e.stopPropagation()
+              setOverlayId(null)
+            }}
+            aria-label='Schließen'
+          >
+            <X size={24} />
+          </CloseBtn>
+          <OverlayImg
+            src={overlaySlide.pic}
+            alt=''
+            onClick={(e) => e.stopPropagation()}
+          />
+          <OverlayNum>
+            {String(overlaySlide.id).padStart(2, "0")} / {SLIDES.length}
+          </OverlayNum>
+        </Overlay>
+      )}
     </Section>
   )
 }
@@ -135,7 +185,7 @@ const Title = styled.h2`
   }
 `
 
-/* Desktop: 3-column Masonry — respects natural image aspect ratio */
+/* Desktop Masonry */
 const Masonry = styled.div`
   display: none;
 
@@ -215,7 +265,7 @@ const ItemNum = styled.span`
   pointer-events: none;
 `
 
-/* Mobile horizontal strip */
+/* Mobile Strip */
 const MobileStrip = styled.div`
   display: flex;
   gap: 4px;
@@ -234,12 +284,16 @@ const MobileStrip = styled.div`
   }
 `
 
-const MobileSlide = styled.div`
+const MobileSlide = styled.button`
   flex-shrink: 0;
   width: 75vw;
   scroll-snap-align: center;
   position: relative;
   background: var(--tile-bg);
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  display: block;
 
   img {
     width: 100%;
@@ -264,16 +318,96 @@ const MobileNum = styled.span`
 `
 
 const Caption = styled.div`
-  display: flex;
-  justify-content: space-between;
   padding: 0.875rem 1.5rem 2rem;
   font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
+  text-align: center;
 
   @media (min-width: 768px) {
     padding: 0.875rem 2rem 2.5rem;
+    text-align: left;
   }
+`
+
+const CaptionDesktop = styled.span`
+  display: none;
+  @media (min-width: 768px) {
+    display: inline;
+  }
+`
+
+const CaptionMobile = styled.span`
+  display: inline;
+  @media (min-width: 768px) {
+    display: none;
+  }
+`
+
+/* Fullscreen Overlay */
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.96);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  padding: 1rem;
+  animation: lais-fade 0.2s ease;
+
+  @keyframes lais-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+`
+
+const OverlayImg = styled.img`
+  max-width: 100%;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: default;
+`
+
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+`
+
+const OverlayNum = styled.div`
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
 `
