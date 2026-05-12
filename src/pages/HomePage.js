@@ -15,16 +15,21 @@ const HomePage = () => {
   return (
     <Page>
       <Navigation />
+      {/* Full-bleed: Hero + Marquee */}
       <Frontpage />
       <News />
-          <InfoSection>
-        <Location />
-        <Open />
-      </InfoSection>
-      <Impressions />
-      <Other />
-      <Reviews />
-      <Darts />
+      {/* Content container — alles dazwischen */}
+      <Content>
+        <Impressions />
+        <InfoSection>
+          <Location />
+          <Open />
+        </InfoSection>
+        <Other />
+        <Reviews />
+        <Darts />
+      </Content>
+      {/* Full-bleed: Footer */}
       <Footer />
       <ScrollUp />
     </Page>
@@ -37,6 +42,18 @@ const Page = styled.div`
   background: var(--bg);
   color: var(--fg);
   min-height: 100vh;
+`
+
+const Content = styled.div`
+  max-width: 1440px;
+  margin: 0 auto;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+
+  @media (max-width: 1440px) {
+    border-left: none;
+    border-right: none;
+  }
 `
 
 const InfoSection = styled.section`
