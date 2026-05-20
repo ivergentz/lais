@@ -20,11 +20,11 @@ const HomePage = () => {
       <News />
       {/* Content container — alles dazwischen */}
       <Content>
-        <Impressions />
         <InfoSection>
           <Location />
           <Open />
         </InfoSection>
+    <Impressions />
         <Other />
         <Reviews />
         <Darts />
